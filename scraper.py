@@ -6,7 +6,8 @@ nodrop=1
 racebets=['australian-grand-prix/winner']
 seasonbets=['constructors-championship','drivers-championship']
 
-bets=seasonbets+racebets
+bets={'racebets':racebets, 'seasonbets':seasonbets}
+
 bookies=['LD','B3','WH','SK','BX','FR','PP','EE']
 
 path='http://www.oddschecker.com/'
@@ -58,11 +59,12 @@ def oddsGrabber(soup,default):
 def urlbuilder_generic(path,stub,bet):
   return '{0}/{1}/{2}'.format(path.strip('/'),stub.strip('/'),bet)
 
-def oddsGrabber_generic(url,default):
-  soup=makeSoup(url)
-  if soup=='':
-    return {}
-  return oddsGrabber(soup,default)
+def oddsGrabber_generic(url,default=None):
+	if default=None: default={}
+	soup=makeSoup(url)
+	if soup=='':
+		return {}
+	return oddsGrabber(soup,default)
 
 def oddsParser_generic(odds,bookies=[]):
   bigodds=[]
@@ -83,26 +85,46 @@ def oddsParser_generic(odds,bookies=[]):
       	
   return bigodds
 
-def tableCheck(table):
-  dropper(table)
-  scraperwiki.sqlite.execute("CREATE TABLE IF NOT EXISTS '{table}' (  'time' datetime , \
-                                                                      'bookie' text, \
-                                                                      'outcome' text, \
-                                                                      'odds' real, \
-                                                                      'oddsraw' text, \
-                                                                      'decodds' real   )".format(table=table))
+def tableCheck(table,base=None):
+	if base is None: base=[]
+	dropper(table)
+	base=base+[ \
+			('time','datetime'), \
+			('bookie','text'), \
+			('outcome','text'), \
+			('odds', 'real'), \
+			('oddsraw','text'), \
+			('decodds', 'real') 	]
+  
+  fields=', '.join([' '.join( map(str,item) ) for item in base ])
+  	
+  tabledef="CREATE TABLE IF NOT EXISTS '{table}' ( {fields} )".format(table=table,fields=fields)
+  scraperwiki.sqlite.execute( tabledef )
 
 playnice=0.1
 
+def betgrabber(path,stub,bet,bookies,default=None):
+	if default is None: default={'def':[],'entry':{},'table':bet}
+	table=default['table']
+	
+	tableCheck(table,default['def'])
+	
+	url=urlbuilder_generic(path, stub, bet)
+	odds=oddsGrabber_generic(url,default['entry'])
+	oddsdata=oddsParser_generic(odds,bookies)
+	scraperwiki.sqlite.save(unique_keys=[],table_name=table, data=oddsdata)
+	sleep(playnice)
+    
 def scraper(path,stub,bets,bookies):
-  for bet in bets:
-    table=bet.replace('/','-')
-    tableCheck(table)
-    url=urlbuilder_generic(path, stub, bet)
-    odds=oddsGrabber_generic(url,{})
-    oddsdata=oddsParser_generic(odds,bookies)
-    scraperwiki.sqlite.save(unique_keys=[],table_name=table, data=oddsdata)
-    sleep(playnice)
+	for bet in bets['seasonbets']:
+		betgrabber(path,stub,bet,bookies)
+	
+	for bet in bets['racebets']:
+		race=bet.split[0]
+		typ=bet.split[1]
+		racedefault={'table':race,'def':[('typ','text')],'entry':{'typ':typ}}
+		betgrabber(path,stub,bet,bookies,racedefault)
+
  
 
 
