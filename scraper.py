@@ -60,7 +60,7 @@ def urlbuilder_generic(path,stub,bet):
   return '{0}/{1}/{2}'.format(path.strip('/'),stub.strip('/'),bet)
 
 def oddsGrabber_generic(url,default=None):
-	if default=None: default={}
+	if default is None: default={}
 	soup=makeSoup(url)
 	if soup=='':
 		return {}
@@ -95,11 +95,9 @@ def tableCheck(table,base=None):
 			('odds', 'real'), \
 			('oddsraw','text'), \
 			('decodds', 'real') 	]
-  
-  fields=', '.join([' '.join( map(str,item) ) for item in base ])
-  	
-  tabledef="CREATE TABLE IF NOT EXISTS '{table}' ( {fields} )".format(table=table,fields=fields)
-  scraperwiki.sqlite.execute( tabledef )
+	fields=', '.join([' '.join( map(str,item) ) for item in base ])
+  	tabledef="CREATE TABLE IF NOT EXISTS '{table}' ( {fields} )".format(table=table,fields=fields)
+  	scraperwiki.sqlite.execute( tabledef )
 
 playnice=0.1
 
