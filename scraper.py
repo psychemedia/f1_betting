@@ -3,8 +3,11 @@ import scraperwiki
 #nodrop - 0 if you want to drop, 1 if you don't
 nodrop=1
 
-bets=['constructors-championship','drivers-championship']
-bookies=['LD','B3','WH','SK','BX','FR']
+racebets=['australian-grand-prix/winner']
+seasonbets=['constructors-championship','drivers-championship']
+
+bets=seasonbets+racebets
+bookies=['LD','B3','WH','SK','BX','FR','PP','EE']
 
 path='http://www.oddschecker.com/'
 stub='motorsport/formula-one/'
