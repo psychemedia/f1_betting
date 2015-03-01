@@ -95,6 +95,7 @@ def scraper(path,stub,bets,bookies):
   for bet in bets:
     tableCheck(bet)
     url=urlbuilder_generic(path, stub, bet)
+    print(url)
     odds=oddsGrabber_generic(url,{})
     oddsdata=oddsParser_generic(odds,bookies)
     scraperwiki.sqlite.save(unique_keys=[],table_name=bet, data=oddsdata)
