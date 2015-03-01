@@ -118,8 +118,8 @@ def scraper(path,stub,bets,bookies):
 		betgrabber(path,stub,bet,bookies)
 	
 	for bet in bets['racebets']:
-		race=bet.split[0]
-		typ=bet.split[1]
+		race=bet.split('/')[0]
+		typ=bet.split('/')[1]
 		racedefault={'table':race,'def':[('typ','text')],'entry':{'typ':typ}}
 		betgrabber(path,stub,bet,bookies,racedefault)
 
