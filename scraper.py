@@ -53,7 +53,7 @@ def oddsGrabber(soup,default):
 
 
 def urlbuilder_generic(path,stub,bet):
-  return 'http://www.oddschecker.com/{0}/{1}/{2}'.format(path.strip('/'),stub.strip('/'),bet)
+  return {0}/{1}/{2}'.format(path.strip('/'),stub.strip('/'),bet)
 
 def oddsGrabber_generic(url,default):
   soup=makeSoup(url)
@@ -95,7 +95,6 @@ def scraper(path,stub,bets,bookies):
   for bet in bets:
     tableCheck(bet)
     url=urlbuilder_generic(path, stub, bet)
-    print(url)
     odds=oddsGrabber_generic(url,{})
     oddsdata=oddsParser_generic(odds,bookies)
     scraperwiki.sqlite.save(unique_keys=[],table_name=bet, data=oddsdata)
