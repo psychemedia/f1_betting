@@ -36,11 +36,11 @@ def makeSoup(url):
 	except: ret=""
 	return ret
 
-def oddsGrabber(soup,default):
+def oddsGrabber(soup):
   if soup=="": return {}
   #soup=makeSoup(url)
   table=soup.find( "tbody", {"id":"t1"} )
-  allbets=default
+  allbets={}
   allbets['time']=datetime.datetime.utcnow()
   bets={}
   for row in table.findAll('tr'):
@@ -59,19 +59,20 @@ def oddsGrabber(soup,default):
 def urlbuilder_generic(path,stub,bet):
   return '{0}/{1}/{2}'.format(path.strip('/'),stub.strip('/'),bet)
 
-def oddsGrabber_generic(url,default=None):
-	if default is None: default={}
+def oddsGrabber_generic(url):
 	soup=makeSoup(url)
 	if soup=='':
 		return {}
-	return oddsGrabber(soup,default)
+	return oddsGrabber(soup)
 
-def oddsParser_generic(odds,bookies=[]):
+def oddsParser_generic(odds,default=None,bookies=[]):
+  if default is None: default={}
   bigodds=[]
   oddsdata=odds['odds']
   for outcome in oddsdata:
     #data in tidy format
-    data={'time':odds['time']}
+    data=default.copy()
+    data['time']=odds['time']
     for bookie in oddsdata[outcome]:
       if bookies==[] or bookie in bookies:
       	data['outcome']=str(outcome)
@@ -108,8 +109,8 @@ def betgrabber(path,stub,bet,bookies,default=None):
 	tableCheck(table,default['def'])
 	
 	url=urlbuilder_generic(path, stub, bet)
-	odds=oddsGrabber_generic(url,default['entry'])
-	oddsdata=oddsParser_generic(odds,bookies)
+	odds=oddsGrabber_generic(url)
+	oddsdata=oddsParser_generic(odds,bookies,default['entry'])
 	scraperwiki.sqlite.save(unique_keys=[],table_name=table, data=oddsdata)
 	sleep(playnice)
     
