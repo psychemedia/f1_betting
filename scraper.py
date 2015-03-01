@@ -96,11 +96,12 @@ playnice=0.1
 
 def scraper(path,stub,bets,bookies):
   for bet in bets:
-    tableCheck(bet)
+    table=bet.replace('/','-')
+    tableCheck(table)
     url=urlbuilder_generic(path, stub, bet)
     odds=oddsGrabber_generic(url,{})
     oddsdata=oddsParser_generic(odds,bookies)
-    scraperwiki.sqlite.save(unique_keys=[],table_name=bet, data=oddsdata)
+    scraperwiki.sqlite.save(unique_keys=[],table_name=table, data=oddsdata)
     sleep(playnice)
  
 
