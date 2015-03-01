@@ -53,7 +53,7 @@ def oddsGrabber(soup,default):
 
 
 def urlbuilder_generic(path,stub,bet):
-  return {0}/{1}/{2}'.format(path.strip('/'),stub.strip('/'),bet)
+  return '{0}/{1}/{2}'.format(path.strip('/'),stub.strip('/'),bet)
 
 def oddsGrabber_generic(url,default):
   soup=makeSoup(url)
