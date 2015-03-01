@@ -65,7 +65,7 @@ def oddsGrabber_generic(url):
 		return {}
 	return oddsGrabber(soup)
 
-def oddsParser_generic(odds,default=None,bookies=[]):
+def oddsParser_generic(odds,bookies=[],default=None):
   if default is None: default={}
   bigodds=[]
   oddsdata=odds['odds']
