@@ -103,6 +103,6 @@ def scraper(path,stub,bets,bookies):
 
 
 
-
+scraper(path,stub,bets,bookies)
 
 
