@@ -37,12 +37,16 @@ def makeSoup(url):
 	return ret
 
 def oddsGrabber(soup):
-  if soup=="": return {}
-  #soup=makeSoup(url)
-  table=soup.find( "tbody", {"id":"t1"} )
   allbets={}
   allbets['time']=datetime.datetime.utcnow()
   bets={}
+  allbets['odds']=bets
+  
+  if soup=="": return allbets
+
+  table=soup.find( "tbody", {"id":"t1"} )
+  if table is None: return allbets
+
   for row in table.findAll('tr'):
     name=row('td')[1].string
     tds = row('td')[3:]
@@ -67,6 +71,7 @@ def oddsGrabber_generic(url):
 
 def oddsParser_generic(odds,bookies=[],default=None):
   if default is None: default={}
+  if 'odds' not in odds: return []
   bigodds=[]
   oddsdata=odds['odds']
   for outcome in oddsdata:
