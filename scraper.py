@@ -3,7 +3,7 @@ import scraperwiki
 #nodrop - 0 if you want to drop, 1 if you don't
 nodrop=1
 
-racebets=['australian-grand-prix/winner']
+racebets=['malaysian-grand-prix/winner']
 seasonbets=['constructors-championship','drivers-championship']
 
 bets={'racebets':racebets, 'seasonbets':seasonbets}
