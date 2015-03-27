@@ -1,5 +1,7 @@
 from __future__ import division
 import scraperwiki
+import mechanize
+
 #nodrop - 0 if you want to drop, 1 if you don't
 nodrop=1
 
@@ -28,6 +30,16 @@ def dropper(table):
         
 def makeSoup(url):
 	try:
+		br = mechanize.Browser()
+		#print '>>>',r.history
+		r=br.open(url)
+		ret= BeautifulSoup(r.read())
+		if r.code==302: ret==""
+	except: ret=""
+	return ret
+	
+def makeSoup2(url):
+	try:
 		r = requests.get(url)
 		#print '>>>',r.history
 		ret= BeautifulSoup(r.text)
@@ -35,6 +47,7 @@ def makeSoup(url):
 			if s.status_code==302: ret==""
 	except: ret=""
 	return ret
+
 
 def oddsGrabber(soup):
   allbets={}
