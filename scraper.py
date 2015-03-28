@@ -2,6 +2,8 @@ from __future__ import division
 import scraperwiki
 import mechanize
 
+from lxml import html
+
 #nodrop - 0 if you want to drop, 1 if you don't
 nodrop=1
 
@@ -33,7 +35,8 @@ def makeSoup(url):
 		br = mechanize.Browser()
 		#print '>>>',r.history
 		r=br.open(url)
-		ret= BeautifulSoup(r.read())
+		#ret= BeautifulSoup(r.read())
+		ret=html.fromstring(r.read())
 		if r.code==302: ret==""
 	except: ret=""
 	return ret
@@ -48,8 +51,27 @@ def makeSoup2(url):
 	except: ret=""
 	return ret
 
+def oddsGrabber(tree,default):
+    allbets=default
+    allbets['time']=datetime.datetime.utcnow()
+    bets={}
+    allbets['odds']=bets
+  
+    if tree=="" or tree is None: return allbets
 
-def oddsGrabber(soup):
+    for row in tree.xpath('//tbody[@id="t1"]/tr'):
+        name=row[1].text
+        bets[name]={}
+        for cell in row[3:]:
+            if cell.text is not None:
+                try:
+                    bets[name][ cell.get('id').split('_')[1] ]=cell.text
+                except: pass
+    allbets['odds']=bets
+    #print(allbets)
+    return allbets
+    
+def oddsGrabber2(soup):
   allbets={}
   allbets['time']=datetime.datetime.utcnow()
   bets={}
