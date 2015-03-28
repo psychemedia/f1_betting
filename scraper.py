@@ -51,8 +51,9 @@ def makeSoup2(url):
 	except: ret=""
 	return ret
 
-def oddsGrabber(tree,default):
-    allbets=default
+def oddsGrabber(tree,default=None):
+    if default is None: allbets={}
+    else: allbets=default
     allbets['time']=datetime.datetime.utcnow()
     bets={}
     allbets['odds']=bets
