@@ -7,7 +7,7 @@ from lxml import html
 #nodrop - 0 if you want to drop, 1 if you don't
 nodrop=1
 
-racebets=['malaysian-grand-prix/winner']
+racebets=['chinese-grand-prix/winner']
 seasonbets=['constructors-championship','drivers-championship']
 
 bets={'racebets':racebets, 'seasonbets':seasonbets}
@@ -141,7 +141,7 @@ def tableCheck(table,base=None):
   	tabledef="CREATE TABLE IF NOT EXISTS '{table}' ( {fields} )".format(table=table,fields=fields)
   	scraperwiki.sqlite.execute( tabledef )
 
-playnice=0.1
+playnice=2.0
 
 def betgrabber(path,stub,bet,bookies,default=None):
 	if default is None: default={'def':[],'entry':{},'table':bet}
@@ -152,6 +152,7 @@ def betgrabber(path,stub,bet,bookies,default=None):
 	url=urlbuilder_generic(path, stub, bet)
 	odds=oddsGrabber_generic(url)
 	oddsdata=oddsParser_generic(odds,bookies,default['entry'])
+	print('Adding {} rows for {}'.format(len(oddsdata),bet))
 	scraperwiki.sqlite.save(unique_keys=[],table_name=table, data=oddsdata)
 	sleep(playnice)
     
