@@ -7,7 +7,7 @@ from lxml import html
 #nodrop - 0 if you want to drop, 1 if you don't
 nodrop=1
 
-racebets=['belgian-grand-prix/winner']
+racebets=['australian-grand-prix/winner','australian-grand-prix/top-3-finish','australian-grand-prix/pole-position']
 seasonbets=['constructors-championship','drivers-championship']
 
 bets={'racebets':racebets, 'seasonbets':seasonbets}
